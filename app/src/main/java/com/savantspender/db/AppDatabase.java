@@ -1,49 +1,37 @@
 package com.savantspender.db;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.room.Dao;
 import androidx.room.Database;
+import androidx.room.Delete;
+import androidx.room.Insert;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.room.Update;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.savantspender.AppExecutors;
 import com.savantspender.db.converter.DateConverter;
-import com.savantspender.db.dao.AccountDao;
-import com.savantspender.db.dao.EmployeeDao;
-import com.savantspender.db.dao.InstitutionDao;
-import com.savantspender.db.dao.ItemDao;
-import com.savantspender.db.dao.ProjectDao;
-import com.savantspender.db.dao.TagDao;
-import com.savantspender.db.dao.TransactionDao;
-import com.savantspender.db.dao.WorksOnDao;
-import com.savantspender.db.entity.AccountEntity;
-import com.savantspender.db.entity.CataloggedEntity;
-import com.savantspender.db.entity.EmployeeEntity;
-import com.savantspender.db.entity.InstitutionEntity;
-import com.savantspender.db.entity.ItemEntity;
-import com.savantspender.db.entity.ProjectEntity;
-import com.savantspender.db.entity.TagEntity;
-import com.savantspender.db.entity.TransactionEntity;
-import com.savantspender.db.entity.WorksOnEntity;
-
-import java.util.concurrent.Executors;
+import com.savantspender.db.dao.PlaidItemDao;
+import com.savantspender.db.dao.acountDoa;
+import com.savantspender.db.dao.initutionDoa;
+import com.savantspender.db.dao.itemDoa;
+import com.savantspender.db.dao.transactionDOA;
+import com.savantspender.db.entity.PlaidItemEntity;
+import com.savantspender.model.PlaidAccount;
+import com.savantspender.model.PlaidItem;
+import com.savantspender.model.PlaidTransaction;
+import com.savantspender.model.Tag;
 
 
 @Database(entities = {
-        EmployeeEntity.class,
-        WorksOnEntity.class,
-        ProjectEntity.class,
-
-        ItemEntity.class,
-        AccountEntity.class,
-        InstitutionEntity.class,
-        TagEntity.class,
-        TransactionEntity.class,
-        CataloggedEntity.class
+        PlaidItemEntity.class
+//        account_enity.class,
+//        transaction_enity.class,
+//        Tag.class
 }, version = 1, exportSchema = false)
 @TypeConverters(DateConverter.class)
 @SuppressWarnings("deprecation")
@@ -52,15 +40,11 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "SavantSpenderDB";
 
 
-    public abstract EmployeeDao employeeDao();
-    public abstract WorksOnDao worksOnDao();
-    public abstract ProjectDao projectDao();
-
-    public abstract ItemDao itemDao();
-    public abstract AccountDao accountDao();
-    public abstract InstitutionDao institutionDao();
-    public abstract TagDao tagDao();
-    public abstract TransactionDao transactionDao();
+    public abstract PlaidItemDao plaidItemDao();
+    public abstract transactionDOA transDOA();
+    public abstract initutionDoa initutionDOA();
+    public abstract acountDoa acountDoa();
+    public abstract itemDoa itemDOA();
 
     public static AppDatabase getInstance(final Context appContext, final AppExecutors executors) {
         if (mAppDatabase == null) {
@@ -81,21 +65,8 @@ public abstract class AppDatabase extends RoomDatabase {
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         executors.diskIO().execute(() -> {
-                            // populate data if needed
+                            // todo: populate anything needed here
                         });
-                    }
-                })
-                .addCallback(new Callback() {
-                    @Override
-                    public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                        super.onCreate(db);
-                        Log.w("Spender", "Creating DB for first time");
-                    }
-
-                    @Override
-                    public void onOpen(@NonNull SupportSQLiteDatabase db) {
-                        super.onOpen(db);
-                        Log.w("Spender", "Opening existing DB");
                     }
                 })
                 .build();
@@ -108,3 +79,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     }
 }
+
+
+
+
